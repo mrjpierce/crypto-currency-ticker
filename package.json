@@ -1,0 +1,18 @@
+{
+  "name": "crypto-currency-ticker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "command-line-args": "^4.0.6",
+    "express": "^4.15.3",
+    "openurl": "^1.1.1",
+    "opn-cli": "^3.1.0",
+    "poloniex-api": "^1.2.4"
+  }
+}
