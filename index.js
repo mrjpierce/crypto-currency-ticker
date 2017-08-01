@@ -21,3 +21,20 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse applica
 
 app.listen(8080);
 console.log("Express app listening on port 8080");
+
+// Open the ticker in the browser
+
+const openurl = require('openurl');
+
+console.log('Openning in browser');
+openurl.open('http://localhost:8080');
+
+// Subscribe to the ticker
+
+const pushApi = require('poloniex-api').pushApi;
+
+console.log('Subscribing to the Poloniex push API');
+console.log('This might take a while...');
+pushApi.create({ subscriptionName: 'ticker', currencyPair }, (obj) => {
+    console.log(obj);
+});
