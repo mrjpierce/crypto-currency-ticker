@@ -12,6 +12,10 @@ body {
     width: 300px;
 }
 
+.avg {
+    float: left;
+}
+
 label {
     font-weight: bold;
     float: left;
