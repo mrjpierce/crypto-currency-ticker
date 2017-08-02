@@ -4,10 +4,9 @@
     <title>Crypto Currency Ticker</title>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <canvas id="tickerChart" width="800px" height="200px"></canvas>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/chart.js/dist/Chart.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/ticker.js"></script>
   </body>

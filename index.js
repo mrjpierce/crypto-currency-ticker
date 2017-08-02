@@ -16,7 +16,8 @@ var io = require('socket.io')(server);
 
 server.listen(80);
 
-app.use(express.static(__dirname + '/public'));    
+app.use(express.static(__dirname + '/public'));  
+app.use('/bower_components', express.static(__dirname + '/bower_components'));  
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
