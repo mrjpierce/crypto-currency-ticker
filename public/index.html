@@ -2,9 +2,16 @@
 <html>
   <head>
     <title>Crypto Currency Ticker</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
+    <div id='header'></div>
     <canvas id="tickerChart" width="825px" height="200px"></canvas>
+    <div id="avgs">
+        <div><label>Avg Last Price: &nbsp</label><div id="avgLastPrice"></div></div>
+        <div><label>Avg Lowest Ask: &nbsp</label><div id="avgLowestAsk"></div></div>
+        <div><label>Avg Highest Bid: &nbsp</label><div id="avgHighestBid"></div></div>
+    </div>
     <script src="/bower_components/moment/moment.js"></script>
     <script src="/bower_components/chart.js/dist/Chart.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>

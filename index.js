@@ -1,5 +1,6 @@
 var tickHistory = [];
 const maxTickHistory = 25;
+const momentFormat = 'MM/DD/YYYY HH:mm:ss';
 var moment = require('moment');
 
 // Process the command line args
@@ -47,19 +48,25 @@ console.log('Subscribing to the Poloniex push API');
 console.log('This may take a minute...');
 var lastTickerMoment = moment();
 pushApi.create({ subscriptionName: 'ticker', currencyPair }, (tickerData) => {
-    
     var nowMoment = moment();
     var duration = moment.duration(nowMoment.diff(lastTickerMoment));
     if(duration.asSeconds() > 1) {
         lastTickerMoment = nowMoment;
-        var tickerUpdate = {
-            moment: nowMoment.format('MM/DD/YYYY HH:mm:ss'),
-            lastPrice: tickerData['lastPrice']
+        console.log('Ticker data received');
+        let tick = {
+            moment: nowMoment.format(momentFormat),
+            lastPrice: parseFloat(tickerData.lastPrice),
+            lowestAsk: parseFloat(tickerData.lowestAsk),
+            highestBid: parseFloat(tickerData.highestBid)
         };
-        tickHistory.push(tickerUpdate);
+        tickHistory.push(tick);
+        let averages = calcAverages(tickHistory);
 
         // Emit to any connected clients
-        io.emit('tick', tickerUpdate);
+        io.emit('tick', {
+            averages,
+            tick
+        });
 
         // Trim the history
         if(tickHistory.length > maxTickHistory) {
@@ -67,3 +74,31 @@ pushApi.create({ subscriptionName: 'ticker', currencyPair }, (tickerData) => {
         }
     }
 });
+
+function calcAverages(tickHistory) {
+    let oneMinuteAgo = moment().subtract(1, 'minute'),
+        validTicks = [],
+        count = 0,
+        sumLastPrices = 0,
+        sumLowestAsk = 0,
+        sumHighestBid = 0;
+
+    tickHistory.map((tick) => {
+        if(moment(tick.moment, momentFormat).isAfter(oneMinuteAgo)) {
+            sumLastPrices += tick.lastPrice;
+            sumLowestAsk += tick.lowestAsk;
+            sumHighestBid += tick.highestBid;
+            count++;
+        }
+    });
+
+    // Returning early
+    if(count < 1)
+        return null;
+
+    return {
+        avgLastPrice: sumLastPrices / count,
+        avgLowestAsk: sumLowestAsk / count,
+        avgHighestBid: sumHighestBid / count
+    };
+}
