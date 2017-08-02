@@ -1,3 +1,7 @@
+var tickHistory = [];
+const maxTickHistory = 25;
+var moment = require('moment');
+
 // Process the command line args
 const commandLineArgs = require('command-line-args');
 const optionDefinitions = [
@@ -17,9 +21,17 @@ var io = require('socket.io')(server);
 server.listen(80);
 
 app.use(express.static(__dirname + '/public'));  
-app.use('/bower_components', express.static(__dirname + '/bower_components'));  
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
+
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
+    res.sendfile(__dirname + '/index.html');
+});
+
+io.on('connection', function (socket) {
+    socket.emit('init', {
+        currencyPair,
+        tickHistory
+    });
 });
 
 // Open the ticker in the browser
@@ -33,9 +45,25 @@ const pushApi = require('poloniex-api').pushApi;
 
 console.log('Subscribing to the Poloniex push API');
 console.log('This may take a minute...');
-pushApi.create({ subscriptionName: 'ticker', currencyPair }, (obj) => {
-    console.log(obj);
+var lastTickerMoment = moment();
+pushApi.create({ subscriptionName: 'ticker', currencyPair }, (tickerData) => {
     
-    // Emit to any connected clients
-    io.emit('tick', obj);
+    var nowMoment = moment();
+    var duration = moment.duration(nowMoment.diff(lastTickerMoment));
+    if(duration.asSeconds() > 1) {
+        lastTickerMoment = nowMoment;
+        var tickerUpdate = {
+            moment: nowMoment.format('MM/DD/YYYY HH:mm:ss'),
+            lastPrice: tickerData['lastPrice']
+        };
+        tickHistory.push(tickerUpdate);
+
+        // Emit to any connected clients
+        io.emit('tick', tickerUpdate);
+
+        // Trim the history
+        if(tickHistory.length > maxTickHistory) {
+            tickHistory = tickHistory.slice(tickHistory.length - maxTickHistory, tickHistory.length);
+        }
+    }
 });
