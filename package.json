@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -13,6 +12,8 @@
     "express": "^4.15.3",
     "openurl": "^1.1.1",
     "opn-cli": "^3.1.0",
-    "poloniex-api": "^1.2.4"
+    "poloniex-api": "^1.2.4",
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3"
   }
 }

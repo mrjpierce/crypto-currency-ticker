@@ -6,5 +6,7 @@ A small single page app ticker for a currency pair that is updated in real time 
 
 ## Running
 ```
+npm install
+bower install   
 node index.js -c "BTC/ETH"
 ```
