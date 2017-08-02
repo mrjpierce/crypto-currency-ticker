@@ -1,8 +1,3 @@
-var tickHistory = [];
-const maxTickHistory = 25;
-const momentFormat = 'MM/DD/YYYY HH:mm:ss';
-var moment = require('moment');
-
 // Process the command line args
 const commandLineArgs = require('command-line-args');
 const optionDefinitions = [
@@ -42,14 +37,21 @@ console.log('Opening in browser');
 openurl.open('http://localhost:80');
 
 // Subscribe to the ticker
+var tickHistory = [];
+const maxTickHistory = 25;
+const momentFormat = 'MM/DD/YYYY HH:mm:ss';
 const pushApi = require('poloniex-api').pushApi;
+const moment = require('moment');
 
 console.log('Subscribing to the Poloniex push API');
 console.log('This may take a minute...');
 var lastTickerMoment = moment();
 pushApi.create({ subscriptionName: 'ticker', currencyPair }, (tickerData) => {
+
     var nowMoment = moment();
     var duration = moment.duration(nowMoment.diff(lastTickerMoment));
+
+    // Protecting against superfluous data
     if(duration.asSeconds() > 1) {
         lastTickerMoment = nowMoment;
         console.log('Ticker data received');
@@ -74,6 +76,8 @@ pushApi.create({ subscriptionName: 'ticker', currencyPair }, (tickerData) => {
         }
     }
 });
+
+/* Convenience function */
 
 function calcAverages(tickHistory) {
     let oneMinuteAgo = moment().subtract(1, 'minute'),

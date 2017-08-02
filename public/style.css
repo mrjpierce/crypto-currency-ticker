@@ -9,15 +9,16 @@ body {
 }
 
 #avgs {
-    width: 300px;
+    width: 600px;
 }
 
 .avg {
     float: left;
+    width: 600px;
 }
 
 label {
     font-weight: bold;
     float: left;
-    width: 150px;
+    width: 180px;
 }
