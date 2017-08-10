@@ -30,14 +30,14 @@ io.on('connection', function (socket) {
     });
 });
 
-// Open the ticker in the browser
+// Open the ticker page in the browser
 const openurl = require('openurl');
 
 console.log('Opening in browser');
 openurl.open('http://localhost:80');
 
 // Subscribe to the ticker
-var tickHistory = [];
+let tickHistory = [];
 const maxTickHistory = 25;
 const momentFormat = 'MM/DD/YYYY HH:mm:ss';
 const pushApi = require('poloniex-api').pushApi;
@@ -54,6 +54,7 @@ pushApi.create({ subscriptionName: 'ticker', currencyPair }, (tickerData) => {
     // Protecting against superfluous data
     if(duration.asSeconds() > 1) {
         lastTickerMoment = nowMoment;
+
         console.log('Ticker data received');
         let tick = {
             moment: nowMoment.format(momentFormat),
